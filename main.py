@@ -31,6 +31,8 @@ df['year'] = df['timestamp'].dt.year
 print(df['month'].value_counts())
 #check how historical the data is
 print(df['year'].value_counts())
+print('hour value counts',df['hour'].value_counts())
+print('weekday value counts',df['weekday'].value_counts())
 
 df.drop(columns = ['month', 'year', 'timestamp'], inplace=True)
 
@@ -43,6 +45,7 @@ print(len(df[df['price']==59.0]))
 df = df[(df['test']==1) & (df['price']==59.0) | (df['test']==0) & (df['price']==39.0)]
 
 print(len(df))
+df.drop(columns = ['price'], inplace=True)
 
 
 #calculate the proportional revenue obtained by the test users vs non test users (google significance of ab test)
@@ -97,10 +100,12 @@ df_clusters = pd.concat([clustersDf, df_ind_res], axis = 1).reset_index()
 df_clusters = df_clusters.drop(['index', 'level_0'], axis = 1)
 
 print(df_clusters.head())
-
+for col in df_clusters.columns:
+    print(col)
 import matplotlib.pyplot as plt
 import seaborn as sns
+cols_clusters = ['source','device', 'operative_system','converted','city','hour','weekday']
 for col in df_enc.columns:
-    plt.subplots(figsize = (15,5))
+    #plt.subplots(figsize = (15,5))
     sns.countplot(x=df_clusters[col],order=df_clusters[col].value_counts().index,hue=df_clusters['cluster_predicted'])
     plt.show()
