@@ -97,16 +97,19 @@ df_enc[to_encode] = df_enc[to_encode].apply(le.fit_transform)
 
 
 
-import scipy.cluster.hierarchy as shc
-from matplotlib import style
-style.use('seaborn-white')
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(10, 7))
-plt.title("Customer Dendograms")
-dend = shc.dendrogram(shc.linkage(df_enc, method='ward'))
-plt.show()
-
-
 from kmodes.kmodes import KModes
+from sklearn.metrics import silhouette_score
+
+silhouette=[]
+cluster_n=[]
+for k in list(range(2,10)):
+        print('Iteration number:', k)
+        km = KModes(n_clusters=k, n_init = 1, verbose=1)
+        preds = km.fit_predict(df_enc)
+        centers = km.cluster_centroids_
+
+        score = silhouette_score(df_enc, preds)
+        cluster_n.append(k)
+        silhouette.append(score)
+        print("For n_clusters = {}, silhouette score is {})".format(k, score))
 
